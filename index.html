@@ -1,161 +1,219 @@
-<!-- Árbol tipo cerezo (romántico) -->
-<div class="tree-wrap" aria-hidden="true">
-  <svg class="tree" viewBox="0 0 360 360">
-    <!-- sombra suave -->
-    <ellipse class="shadow" cx="180" cy="320" rx="80" ry="14"></ellipse>
+<div class="scene">
+  <svg id="treeSvg" viewBox="0 0 600 600" width="520" height="520" aria-hidden="true">
+    <defs>
+      <!-- Corazón -->
+      <symbol id="heart" viewBox="0 0 32 32">
+        <path d="M16 29s-12-7.4-12-16A7 7 0 0 1 16 9a7 7 0 0 1 12 4c0 8.6-12 16-12 16z"/>
+      </symbol>
 
-    <!-- tronco -->
-    <path class="trunk"
-      d="M175 305
-         C170 270, 165 250, 165 225
-         C165 205, 175 195, 175 175
-         C175 155, 160 145, 160 125
-         C160 95, 185 95, 190 120
-         C195 145, 210 155, 210 180
-         C210 205, 195 215, 195 235
-         C195 255, 192 275, 190 305
-         Z"></path>
+      <!-- gradiente tronco -->
+      <linearGradient id="trunkGrad" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="#ff4f8f"/>
+        <stop offset="1" stop-color="#e51f5f"/>
+      </linearGradient>
+    </defs>
 
-    <!-- ramitas -->
-    <path class="branch" d="M175 190 C150 175, 135 155, 125 135"></path>
-    <path class="branch" d="M195 200 C225 190, 245 170, 255 150"></path>
-    <path class="branch" d="M185 170 C175 150, 170 130, 165 110"></path>
+    <!-- TRONCO (se dibuja "creciendo") -->
+    <path id="trunk" class="trunk"
+      d="M290 560
+         C270 505, 270 455, 280 405
+         C290 355, 310 320, 305 275
+         C300 235, 275 210, 270 170
+         C265 130, 290 110, 310 125
+         C330 140, 335 170, 340 210
+         C345 250, 365 270, 370 305
+         C375 340, 360 370, 355 410
+         C350 450, 350 505, 330 560
+         Z" />
 
-    <!-- copa (bolita grande rosa) -->
-    <circle class="canopy" cx="180" cy="120" r="82"></circle>
-    <circle class="canopy2" cx="130" cy="135" r="55"></circle>
-    <circle class="canopy2" cx="235" cy="140" r="58"></circle>
-    <circle class="canopy3" cx="175" cy="70" r="52"></circle>
+    <!-- RAMAS (también se “dibujan”) -->
+    <path class="branch" d="M310 300 C265 275, 235 240, 220 205" />
+    <path class="branch" d="M325 320 C375 300, 415 260, 440 220" />
+    <path class="branch" d="M315 250 C300 220, 290 190, 285 160" />
+    <path class="branch" d="M335 270 C360 245, 380 215, 395 185" />
 
-    <!-- corazoncitos dentro de la copa -->
-    <g class="hearts-in">
-      <path class="heart h1" d="M140 115
-        C140 105, 152 103, 156 112
-        C160 103, 172 105, 172 115
-        C172 128, 156 138, 156 138
-        C156 138, 140 128, 140 115 Z"/>
-      <path class="heart h2" d="M210 110
-        C210 102, 220 100, 223 107
-        C226 100, 236 102, 236 110
-        C236 121, 223 129, 223 129
-        C223 129, 210 121, 210 110 Z"/>
-      <path class="heart h3" d="M175 145
-        C175 137, 185 136, 188 143
-        C191 136, 201 137, 201 145
-        C201 156, 188 164, 188 164
-        C188 164, 175 156, 175 145 Z"/>
-      <path class="heart h4" d="M120 150
-        C120 143, 129 142, 132 148
-        C135 142, 144 143, 144 150
-        C144 160, 132 167, 132 167
-        C132 167, 120 160, 120 150 Z"/>
-      <path class="heart h5" d="M235 155
-        C235 148, 244 147, 247 153
-        C250 147, 259 148, 259 155
-        C259 165, 247 172, 247 172
-        C247 172, 235 165, 235 155 Z"/>
-    </g>
+    <!-- Grupo donde se insertan los corazones -->
+    <g id="canopy"></g>
   </svg>
-
-  <!-- corazones cayendo -->
-  <div class="falling">
-    <span class="fh"></span><span class="fh"></span><span class="fh"></span>
-    <span class="fh"></span><span class="fh"></span><span class="fh"></span>
-    <span class="fh"></span><span class="fh"></span><span class="fh"></span>
-  </div>
 </div>
 
 <style>
-  .tree-wrap{
-    position: relative;
-    width: min(360px, 70vw);
-    aspect-ratio: 1/1;
-    margin: 0 auto;
-  }
-
-  .tree{
-    width: 100%;
-    height: 100%;
-    display: block;
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
-  }
-
-  .shadow{ fill: rgba(0,0,0,.12); }
+  body{ margin:0; display:grid; place-items:center; min-height:100vh; background:#fff; }
+  .scene{ position:relative; }
 
   .trunk{
-    fill: #7a4a2a;
-    filter: drop-shadow(0 6px 10px rgba(0,0,0,.10));
-  }
-  .branch{
-    fill: none;
-    stroke: #6b3f24;
-    stroke-width: 10;
-    stroke-linecap: round;
-    opacity: .9;
-  }
-
-  .canopy{ fill: #ff7fb0; opacity: .95; }
-  .canopy2{ fill: #ff93bf; opacity: .92; }
-  .canopy3{ fill: #ff6aa7; opacity: .92; }
-
-  .hearts-in .heart{
-    fill: rgba(255,255,255,.75);
-    stroke: rgba(255,255,255,.35);
+    fill:url(#trunkGrad);
+    stroke: rgba(0,0,0,.06);
     stroke-width: 2;
+    transform-origin: 300px 560px;
+    /* animación “crecer dibujándose” */
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: draw 2.2s ease forwards;
+  }
+
+  .branch{
+    fill:none;
+    stroke:#ff3f86;
+    stroke-width:14;
+    stroke-linecap:round;
+    opacity:.95;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    animation: draw 1.6s ease forwards;
+    animation-delay: 1.4s; /* después del tronco */
+  }
+
+  @keyframes draw{
+    to{ stroke-dashoffset:0; }
+  }
+
+  /* Corazones (brotan) */
+  .leaf{
     transform-origin: center;
-    animation: pop 2.6s ease-in-out infinite;
+    opacity:0;
+    animation: sprout .55s ease forwards;
   }
-  .h2{ animation-delay: .3s; }
-  .h3{ animation-delay: .6s; }
-  .h4{ animation-delay: .9s; }
-  .h5{ animation-delay: 1.2s; }
-
-  @keyframes pop{
-    0%,100%{ transform: scale(1); opacity: .75; }
-    50%{ transform: scale(1.12); opacity: .95; }
+  @keyframes sprout{
+    0%{ transform: translateY(8px) scale(.2); opacity:0; }
+    70%{ transform: translateY(0) scale(1.15); opacity:1; }
+    100%{ transform: translateY(0) scale(1); opacity:1; }
   }
 
-  /* corazones cayendo */
+  /* Caída (uno por uno) */
   .falling{
-    position:absolute; inset:0;
-    overflow:hidden;
-    pointer-events:none;
+    animation: fall var(--fallDur) ease-in forwards;
   }
-  .fh{
-    position:absolute;
-    top:-10%;
-    left: calc(var(--x) * 1%);
-    width: 16px;
-    height: 16px;
-    background: #ff5fa2;
-    transform: rotate(45deg);
-    border-radius: 4px;
-    opacity: .85;
-    animation: fall var(--d) linear infinite;
-    filter: drop-shadow(0 6px 10px rgba(0,0,0,.12));
-  }
-  .fh::before, .fh::after{
-    content:"";
-    position:absolute;
-    width: 16px; height: 16px;
-    background: inherit;
-    border-radius: 50%;
-  }
-  .fh::before{ left:-8px; top:0; }
-  .fh::after{ left:0; top:-8px; }
-
-  .fh:nth-child(1){ --x: 20; --d: 6.5s; transform: rotate(45deg) scale(.8); }
-  .fh:nth-child(2){ --x: 35; --d: 7.2s; transform: rotate(45deg) scale(1);  opacity:.7;}
-  .fh:nth-child(3){ --x: 50; --d: 5.8s; transform: rotate(45deg) scale(.9); }
-  .fh:nth-child(4){ --x: 62; --d: 8.0s; transform: rotate(45deg) scale(1.1); opacity:.65;}
-  .fh:nth-child(5){ --x: 75; --d: 6.8s; transform: rotate(45deg) scale(.85); }
-  .fh:nth-child(6){ --x: 28; --d: 7.9s; transform: rotate(45deg) scale(.95); opacity:.6;}
-  .fh:nth-child(7){ --x: 44; --d: 6.1s; transform: rotate(45deg) scale(.75); }
-  .fh:nth-child(8){ --x: 58; --d: 7.0s; transform: rotate(45deg) scale(.9);  opacity:.7;}
-  .fh:nth-child(9){ --x: 83; --d: 8.4s; transform: rotate(45deg) scale(.8);  opacity:.6;}
-
   @keyframes fall{
-    0%{ transform: translateY(0) rotate(45deg); }
-    100%{ transform: translateY(115%) rotate(45deg); }
+    0%{ transform: translate(0,0) rotate(0deg); opacity:1; }
+    100%{ transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity:0; }
   }
 </style>
+
+<script>
+  // --- Config ---
+  const HEART_COUNT = 75;      // cantidad de hojas/corazones
+  const SPROUT_START_DELAY = 2600; // ms (cuando termina de crecer)
+  const SPROUT_INTERVAL_MIN = 30;  // ms entre brotes (random)
+  const SPROUT_INTERVAL_MAX = 90;
+  const FALL_START_GAP = 1200;     // ms después del último brote
+  const FALL_INTERVAL_MIN = 120;   // ms entre caídas (random)
+  const FALL_INTERVAL_MAX = 420;
+
+  const svg = document.getElementById("treeSvg");
+  const canopy = document.getElementById("canopy");
+
+  // Posiciones en “nube” como en la imagen (centro arriba)
+  const center = { x: 305, y: 190 };
+  const radiusX = 190;
+  const radiusY = 170;
+
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+  function randi(min, max){ return Math.floor(rand(min, max+1)); }
+
+  function randomHeartColor(){
+    const colors = ["#ff3b7f","#ff5fa2","#ff7fb0","#ff96c1","#ff2f6f"];
+    return colors[randi(0, colors.length-1)];
+  }
+
+  function randomPointInOval(){
+    // distribución más densa en el centro
+    const t = Math.random() * Math.PI * 2;
+    const u = Math.pow(Math.random(), 0.55); // 0.55 = más hacia el centro
+    const x = center.x + Math.cos(t) * radiusX * u;
+    const y = center.y + Math.sin(t) * radiusY * u;
+    return {x, y};
+  }
+
+  function createLeaf(i){
+    const {x, y} = randomPointInOval();
+    const size = rand(16, 34);
+    const rot = rand(-25, 25);
+
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#heart");
+    use.setAttribute("x", x - size/2);
+    use.setAttribute("y", y - size/2);
+    use.setAttribute("width", size);
+    use.setAttribute("height", size);
+    use.setAttribute("class", "leaf");
+    use.style.fill = randomHeartColor();
+    use.style.transform = `rotate(${rot}deg)`;
+    use.style.animationDelay = "0ms"; // el delay lo controla el setTimeout
+
+    // ligero brillo/sombra
+    use.style.filter = "drop-shadow(0 6px 10px rgba(0,0,0,.10))";
+
+    canopy.appendChild(use);
+    return use;
+  }
+
+  const leaves = [];
+
+  // 1) Brotar corazones aleatorios, uno por uno, con tiempos random
+  function sproutLeaves(){
+    let created = 0;
+
+    function next(){
+      if(created >= HEART_COUNT) return;
+
+      const leaf = createLeaf(created);
+      leaves.push(leaf);
+
+      created++;
+      const delay = randi(SPROUT_INTERVAL_MIN, SPROUT_INTERVAL_MAX);
+      setTimeout(next, delay);
+    }
+
+    next();
+  }
+
+  // 2) Caer hojas: una por una, aleatorio (orden random + tiempos random)
+  function startFalling(){
+    const pool = [...leaves];
+
+    function dropOne(){
+      if(pool.length === 0) return;
+
+      const idx = randi(0, pool.length-1);
+      const leaf = pool.splice(idx, 1)[0];
+
+      // física “linda” de caída
+      const dx = rand(-40, 40).toFixed(1) + "px";
+      const dy = rand(220, 320).toFixed(1) + "px";
+      const rot = rand(-220, 220).toFixed(0) + "deg";
+      const dur = rand(1.8, 3.2).toFixed(2) + "s";
+
+      leaf.style.setProperty("--dx", dx);
+      leaf.style.setProperty("--dy", dy);
+      leaf.style.setProperty("--rot", rot);
+      leaf.style.setProperty("--fallDur", dur);
+
+      leaf.classList.add("falling");
+
+      // opcional: eliminar cuando termine
+      leaf.addEventListener("animationend", () => {
+        leaf.remove();
+      }, { once:true });
+
+      const delay = randi(FALL_INTERVAL_MIN, FALL_INTERVAL_MAX);
+      setTimeout(dropOne, delay);
+    }
+
+    dropOne();
+  }
+
+  // Orquestación (tronco -> brotes -> caída)
+  setTimeout(() => {
+    sproutLeaves();
+
+    // calcula aprox cuándo terminó de brotar (peor caso)
+    const avg = (SPROUT_INTERVAL_MIN + SPROUT_INTERVAL_MAX) / 2;
+    const approxEnd = HEART_COUNT * avg;
+
+    setTimeout(() => {
+      startFalling();
+    }, approxEnd + FALL_START_GAP);
+
+  }, SPROUT_START_DELAY);
+</script>
