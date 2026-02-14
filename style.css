@@ -3,7 +3,13 @@
   --bg2:#7a1b88;
   --card:#fff3f7;
   --ink:#2a1b2b;
-  --trunk:#7a4a2a;
+
+  --wood:#6b3f25;
+  --wood2:#7a4a2a;
+  --leaf:#ff2f86;
+
+  /* Duración total del loop */
+  --loop: 9s;
 }
 
 *{box-sizing:border-box}
@@ -31,7 +37,6 @@ body{
   display:grid;
   grid-template-columns: 1.1fr .9fr;
   gap:18px;
-  position:relative;
 }
 
 @media (max-width: 820px){
@@ -48,10 +53,7 @@ body{
   min-height: 6.5em;
   white-space: pre-wrap;
 }
-.since{
-  margin-top:14px;
-  opacity:.8;
-}
+.since{margin-top:14px; opacity:.8;}
 
 .scene{
   position:relative;
@@ -61,60 +63,96 @@ body{
   min-height:420px;
 }
 
-/* Árbol */
+/* ======= ÁRBOL SVG ======= */
 .tree{
   width:100%;
   height:100%;
   position:absolute;
   inset:0;
-  transform-origin: 50% 90%;
-  animation: treeGrow 6s ease-in-out infinite;
 }
 
-.trunk rect{
-  fill:var(--trunk);
-  filter: drop-shadow(0 8px 8px rgba(0,0,0,.18));
-}
-.trunk path{
+/* Trazos estilo “dibujo” */
+.trunk, .branch, .root{
   fill:none;
-  stroke:var(--trunk);
-  stroke-width:10;
   stroke-linecap:round;
-  filter: drop-shadow(0 8px 8px rgba(0,0,0,.18));
+  stroke-linejoin:round;
+  filter: drop-shadow(0 10px 10px rgba(0,0,0,.14));
 }
 
-/* “Brote” de hojas/corazones */
-.bloom{
-  fill:#ff2f86;
-  opacity:0;
+/* Tronco más grueso */
+.trunk{
+  stroke: var(--wood2);
+  stroke-width: 16;
+}
+
+/* Ramas */
+.branch{
+  stroke: var(--wood);
+  stroke-width: 12;
+}
+
+/* Raíces */
+.root{
+  stroke: var(--wood);
+  stroke-width: 10;
+  opacity: .0; /* aparece al inicio */
+  animation: rootIn var(--loop) ease-in-out infinite;
+}
+
+/* “Dibujar” con dash */
+.trunk, .branch{
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: drawTree var(--loop) ease-in-out infinite;
+}
+
+/* Retrasos: raíz -> tronco -> ramas */
+.trunk{ animation-delay: 0s; }
+.branch:nth-of-type(2){ animation-delay: .6s; }
+.branch:nth-of-type(3){ animation-delay: .8s; }
+.branch:nth-of-type(4){ animation-delay: 1.0s; }
+.branch:nth-of-type(5){ animation-delay: 1.2s; }
+
+/* Hojas (corazones) brotan después */
+.leaves .leaf{
+  fill: var(--leaf);
+  opacity: 0;
   transform-origin: center;
-  animation: bloomPop 6s ease-in-out infinite;
+  transform: scale(.2);
+  animation: leavesBloom var(--loop) ease-in-out infinite;
 }
-.bloom:nth-child(2){animation-delay:.25s}
-.bloom:nth-child(3){animation-delay:.45s}
-.bloom:nth-child(4){animation-delay:.65s}
-.bloom:nth-child(5){animation-delay:.85s}
 
-/* Corazones cayendo */
+/* Variaciones para que no salgan iguales */
+.leaves .leaf:nth-child(1){ animation-delay: 2.0s; }
+.leaves .leaf:nth-child(2){ animation-delay: 2.2s; }
+.leaves .leaf:nth-child(3){ animation-delay: 2.35s; }
+.leaves .leaf:nth-child(4){ animation-delay: 2.0s; }
+.leaves .leaf:nth-child(5){ animation-delay: 2.25s; }
+.leaves .leaf:nth-child(6){ animation-delay: 2.45s; }
+.leaves .leaf:nth-child(7){ animation-delay: 2.15s; }
+.leaves .leaf:nth-child(8){ animation-delay: 2.35s; }
+.leaves .leaf:nth-child(9){ animation-delay: 2.55s; }
+
+/* ======= CORAZONES QUE CAEN ======= */
 .falling{
   position:absolute;
   inset:0;
   pointer-events:none;
 }
 
-.heart{
+.fall-heart{
   position:absolute;
   width:14px;
   height:14px;
   transform: rotate(45deg);
-  opacity:.9;
-  animation: fall var(--dur) linear infinite;
+  opacity:0;
   left: var(--x);
-  top: -20px;
-  filter: drop-shadow(0 6px 6px rgba(0,0,0,.12));
+  top: var(--y);
+  animation: fall var(--dur) linear forwards;
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,.12));
 }
-.heart::before,
-.heart::after{
+.fall-heart::before,
+.fall-heart::after{
   content:"";
   position:absolute;
   width:14px;
@@ -122,36 +160,33 @@ body{
   background: var(--c);
   border-radius:50%;
 }
-.heart{
-  background: var(--c);
-}
-.heart::before{ left:-7px; top:0; }
-.heart::after{ left:0; top:-7px; }
+.fall-heart{ background: var(--c); }
+.fall-heart::before{ left:-7px; top:0; }
+.fall-heart::after{ left:0; top:-7px; }
 
-/* Animaciones principales */
-@keyframes treeGrow{
-  0%   { transform: translateY(60px) scaleY(.25) scaleX(.9); opacity:.55; }
-  35%  { transform: translateY(0) scaleY(1) scaleX(1); opacity:1; }
-  70%  { transform: translateY(0) scaleY(1) scaleX(1); opacity:1; }
-  100% { transform: translateY(60px) scaleY(.25) scaleX(.9); opacity:.55; }
-}
+/* ======= KEYFRAMES (timeline del loop) ======= */
 
-@keyframes bloomPop{
-  0%, 25% { opacity:0; transform: scale(.2); }
-  45%     { opacity:1; transform: scale(1.15); }
-  60%     { opacity:1; transform: scale(1); }
-  80%     { opacity:1; transform: scale(1); }
-  100%    { opacity:0; transform: scale(.2); }
+/* Raíz aparece rápido, luego se va al final para reiniciar */
+@keyframes rootIn{
+  0%{ opacity:0; }
+  8%{ opacity:1; }
+  85%{ opacity:1; }
+  100%{ opacity:0; }
 }
 
-@keyframes fall{
-  0%{
-    transform: translate(0, 0) rotate(45deg);
-    opacity:0;
-  }
-  10%{opacity:.9;}
-  100%{
-    transform: translate(var(--wind), 520px) rotate(405deg);
-    opacity:0;
-  }
+/* Dibuja de abajo hacia arriba y luego “reset” */
+@keyframes drawTree{
+  0%   { stroke-dashoffset: 500; opacity:1; }
+  28%  { stroke-dashoffset: 0; opacity:1; }   /* árbol dibujado */
+  85%  { stroke-dashoffset: 0; opacity:1; }
+  100% { stroke-dashoffset: 500; opacity:0; } /* reset */
 }
+
+/* Brote: aparece y late suave, luego desaparece para reiniciar */
+@keyframes leavesBloom{
+  0%   { opacity:0; transform: scale(.2); }
+  25%  { opacity:0; transform: scale(.2); }
+  38%  { opacity:1; transform: scale(1.15); }
+  50%  { opacity:1; transform: scale(1.0); }
+  70%  { opacity:1; transform: scale(1.04); }
+  85%  { opacity:1; transform: scale(1.
