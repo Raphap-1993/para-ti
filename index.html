@@ -1,19 +1,16 @@
-<div class="scene">
-  <svg id="treeSvg" viewBox="0 0 600 600" width="520" height="520" aria-hidden="true">
+<div class="tree-section">
+  <svg id="treeSvg" viewBox="0 0 600 600" class="tree-svg" aria-hidden="true">
     <defs>
-      <!-- Corazón -->
       <symbol id="heart" viewBox="0 0 32 32">
         <path d="M16 29s-12-7.4-12-16A7 7 0 0 1 16 9a7 7 0 0 1 12 4c0 8.6-12 16-12 16z"/>
       </symbol>
 
-      <!-- gradiente tronco -->
       <linearGradient id="trunkGrad" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0" stop-color="#ff4f8f"/>
         <stop offset="1" stop-color="#e51f5f"/>
       </linearGradient>
     </defs>
 
-    <!-- TRONCO (se dibuja "creciendo") -->
     <path id="trunk" class="trunk"
       d="M290 560
          C270 505, 270 455, 280 405
@@ -26,194 +23,11 @@
          C350 450, 350 505, 330 560
          Z" />
 
-    <!-- RAMAS (también se “dibujan”) -->
     <path class="branch" d="M310 300 C265 275, 235 240, 220 205" />
     <path class="branch" d="M325 320 C375 300, 415 260, 440 220" />
     <path class="branch" d="M315 250 C300 220, 290 190, 285 160" />
     <path class="branch" d="M335 270 C360 245, 380 215, 395 185" />
 
-    <!-- Grupo donde se insertan los corazones -->
     <g id="canopy"></g>
   </svg>
 </div>
-
-<style>
-  body{ margin:0; display:grid; place-items:center; min-height:100vh; background:#fff; }
-  .scene{ position:relative; }
-
-  .trunk{
-    fill:url(#trunkGrad);
-    stroke: rgba(0,0,0,.06);
-    stroke-width: 2;
-    transform-origin: 300px 560px;
-    /* animación “crecer dibujándose” */
-    stroke-dasharray: 2000;
-    stroke-dashoffset: 2000;
-    animation: draw 2.2s ease forwards;
-  }
-
-  .branch{
-    fill:none;
-    stroke:#ff3f86;
-    stroke-width:14;
-    stroke-linecap:round;
-    opacity:.95;
-    stroke-dasharray: 800;
-    stroke-dashoffset: 800;
-    animation: draw 1.6s ease forwards;
-    animation-delay: 1.4s; /* después del tronco */
-  }
-
-  @keyframes draw{
-    to{ stroke-dashoffset:0; }
-  }
-
-  /* Corazones (brotan) */
-  .leaf{
-    transform-origin: center;
-    opacity:0;
-    animation: sprout .55s ease forwards;
-  }
-  @keyframes sprout{
-    0%{ transform: translateY(8px) scale(.2); opacity:0; }
-    70%{ transform: translateY(0) scale(1.15); opacity:1; }
-    100%{ transform: translateY(0) scale(1); opacity:1; }
-  }
-
-  /* Caída (uno por uno) */
-  .falling{
-    animation: fall var(--fallDur) ease-in forwards;
-  }
-  @keyframes fall{
-    0%{ transform: translate(0,0) rotate(0deg); opacity:1; }
-    100%{ transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity:0; }
-  }
-</style>
-
-<script>
-  // --- Config ---
-  const HEART_COUNT = 75;      // cantidad de hojas/corazones
-  const SPROUT_START_DELAY = 2600; // ms (cuando termina de crecer)
-  const SPROUT_INTERVAL_MIN = 30;  // ms entre brotes (random)
-  const SPROUT_INTERVAL_MAX = 90;
-  const FALL_START_GAP = 1200;     // ms después del último brote
-  const FALL_INTERVAL_MIN = 120;   // ms entre caídas (random)
-  const FALL_INTERVAL_MAX = 420;
-
-  const svg = document.getElementById("treeSvg");
-  const canopy = document.getElementById("canopy");
-
-  // Posiciones en “nube” como en la imagen (centro arriba)
-  const center = { x: 305, y: 190 };
-  const radiusX = 190;
-  const radiusY = 170;
-
-  function rand(min, max){ return Math.random() * (max - min) + min; }
-  function randi(min, max){ return Math.floor(rand(min, max+1)); }
-
-  function randomHeartColor(){
-    const colors = ["#ff3b7f","#ff5fa2","#ff7fb0","#ff96c1","#ff2f6f"];
-    return colors[randi(0, colors.length-1)];
-  }
-
-  function randomPointInOval(){
-    // distribución más densa en el centro
-    const t = Math.random() * Math.PI * 2;
-    const u = Math.pow(Math.random(), 0.55); // 0.55 = más hacia el centro
-    const x = center.x + Math.cos(t) * radiusX * u;
-    const y = center.y + Math.sin(t) * radiusY * u;
-    return {x, y};
-  }
-
-  function createLeaf(i){
-    const {x, y} = randomPointInOval();
-    const size = rand(16, 34);
-    const rot = rand(-25, 25);
-
-    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    use.setAttribute("href", "#heart");
-    use.setAttribute("x", x - size/2);
-    use.setAttribute("y", y - size/2);
-    use.setAttribute("width", size);
-    use.setAttribute("height", size);
-    use.setAttribute("class", "leaf");
-    use.style.fill = randomHeartColor();
-    use.style.transform = `rotate(${rot}deg)`;
-    use.style.animationDelay = "0ms"; // el delay lo controla el setTimeout
-
-    // ligero brillo/sombra
-    use.style.filter = "drop-shadow(0 6px 10px rgba(0,0,0,.10))";
-
-    canopy.appendChild(use);
-    return use;
-  }
-
-  const leaves = [];
-
-  // 1) Brotar corazones aleatorios, uno por uno, con tiempos random
-  function sproutLeaves(){
-    let created = 0;
-
-    function next(){
-      if(created >= HEART_COUNT) return;
-
-      const leaf = createLeaf(created);
-      leaves.push(leaf);
-
-      created++;
-      const delay = randi(SPROUT_INTERVAL_MIN, SPROUT_INTERVAL_MAX);
-      setTimeout(next, delay);
-    }
-
-    next();
-  }
-
-  // 2) Caer hojas: una por una, aleatorio (orden random + tiempos random)
-  function startFalling(){
-    const pool = [...leaves];
-
-    function dropOne(){
-      if(pool.length === 0) return;
-
-      const idx = randi(0, pool.length-1);
-      const leaf = pool.splice(idx, 1)[0];
-
-      // física “linda” de caída
-      const dx = rand(-40, 40).toFixed(1) + "px";
-      const dy = rand(220, 320).toFixed(1) + "px";
-      const rot = rand(-220, 220).toFixed(0) + "deg";
-      const dur = rand(1.8, 3.2).toFixed(2) + "s";
-
-      leaf.style.setProperty("--dx", dx);
-      leaf.style.setProperty("--dy", dy);
-      leaf.style.setProperty("--rot", rot);
-      leaf.style.setProperty("--fallDur", dur);
-
-      leaf.classList.add("falling");
-
-      // opcional: eliminar cuando termine
-      leaf.addEventListener("animationend", () => {
-        leaf.remove();
-      }, { once:true });
-
-      const delay = randi(FALL_INTERVAL_MIN, FALL_INTERVAL_MAX);
-      setTimeout(dropOne, delay);
-    }
-
-    dropOne();
-  }
-
-  // Orquestación (tronco -> brotes -> caída)
-  setTimeout(() => {
-    sproutLeaves();
-
-    // calcula aprox cuándo terminó de brotar (peor caso)
-    const avg = (SPROUT_INTERVAL_MIN + SPROUT_INTERVAL_MAX) / 2;
-    const approxEnd = HEART_COUNT * avg;
-
-    setTimeout(() => {
-      startFalling();
-    }, approxEnd + FALL_START_GAP);
-
-  }, SPROUT_START_DELAY);
-</script>
