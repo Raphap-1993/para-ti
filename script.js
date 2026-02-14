@@ -1,113 +1,89 @@
-// ========= 1) TEXTO ESCRIBIÉNDOSE (loop) =========
-const lines = [
-  "Si pudiera elegir un lugar seguro, sería a tu lado.",
-  "Gracias por existir. 💗",
-  "¿Quieres ser mi San Valentín?"
-];
+(() => {
+  const HEART_COUNT = 75;
+  const SPROUT_START_DELAY = 2600;
+  const SPROUT_INTERVAL_MIN = 30;
+  const SPROUT_INTERVAL_MAX = 90;
+  const FALL_START_GAP = 1200;
+  const FALL_INTERVAL_MIN = 120;
+  const FALL_INTERVAL_MAX = 420;
 
-const typeEl = document.getElementById("typewriter");
+  const canopy = document.getElementById("canopy");
+  const svg = document.getElementById("treeSvg");
+  if (!canopy || !svg) return; // por si estás en otra página
 
-function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+  const center = { x: 305, y: 190 };
+  const radiusX = 190;
+  const radiusY = 170;
 
-async function typeLine(text){
-  for (let i = 0; i < text.length; i++){
-    typeEl.textContent += text[i];
-    await sleep(30 + Math.random() * 25);
+  const leaves = [];
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const randi = (min, max) => Math.floor(rand(min, max + 1));
+
+  function randomHeartColor(){
+    const colors = ["#ff3b7f","#ff5fa2","#ff7fb0","#ff96c1","#ff2f6f"];
+    return colors[randi(0, colors.length - 1)];
   }
-}
 
-async function typeLoop(){
-  while(true){
-    typeEl.textContent = "";
-    for (let i = 0; i < lines.length; i++){
-      await typeLine(lines[i]);
-      if (i < lines.length - 1) {
-        typeEl.textContent += "\n";
-        await sleep(500);
-      }
-    }
-    await sleep(1800);
+  function randomPointInOval(){
+    const t = Math.random() * Math.PI * 2;
+    const u = Math.pow(Math.random(), 0.55);
+    return {
+      x: center.x + Math.cos(t) * radiusX * u,
+      y: center.y + Math.sin(t) * radiusY * u
+    };
   }
-}
-typeLoop();
 
-// ========= 2) CONTADOR “comenzó hace…” =========
-const sinceEl = document.getElementById("since");
-const startDate = new Date("2025-02-14T00:00:00"); // cámbiala
+  function createLeaf(){
+    const {x, y} = randomPointInOval();
+    const size = rand(16, 34);
+    const rot = rand(-25, 25);
 
-function updateSince(){
-  const now = new Date();
-  let diff = Math.max(0, now - startDate);
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#heart");
+    use.setAttribute("x", x - size/2);
+    use.setAttribute("y", y - size/2);
+    use.setAttribute("width", size);
+    use.setAttribute("height", size);
+    use.setAttribute("class", "leaf");
+    use.style.fill = randomHeartColor();
+    use.style.transform = `rotate(${rot}deg)`;
+    use.style.filter = "drop-shadow(0 6px 10px rgba(0,0,0,.12))";
+    canopy.appendChild(use);
+    return use;
+  }
 
-  const sec = Math.floor(diff / 1000);
-  const days = Math.floor(sec / 86400);
-  const hours = Math.floor((sec % 86400) / 3600);
-  const mins = Math.floor((sec % 3600) / 60);
-  const secs = sec % 60;
+  function sproutLeaves(){
+    let created = 0;
+    (function next(){
+      if(created >= HEART_COUNT) return;
+      const leaf = createLeaf();
+      leaves.push(leaf);
+      created++;
+      setTimeout(next, randi(SPROUT_INTERVAL_MIN, SPROUT_INTERVAL_MAX));
+    })();
+  }
 
-  sinceEl.textContent =
-    `Mi amor por ti comenzó hace... ${days} días ${hours} horas ${mins} minutos ${secs} segundos`;
-}
-setInterval(updateSince, 1000);
-updateSince();
+  function startFalling(){
+    const pool = [...leaves];
+    (function dropOne(){
+      if(pool.length === 0) return;
+      const leaf = pool.splice(randi(0, pool.length-1), 1)[0];
 
-// ========= 3) CORAZONES QUE CAEN DESDE LA COPA (solo cuando hay hojas) =========
-const falling = document.getElementById("falling");
+      leaf.style.setProperty("--dx", rand(-40, 40).toFixed(1) + "px");
+      leaf.style.setProperty("--dy", rand(220, 320).toFixed(1) + "px");
+      leaf.style.setProperty("--rot", rand(-220, 220).toFixed(0) + "deg");
+      leaf.style.setProperty("--fallDur", rand(1.8, 3.2).toFixed(2) + "s");
+      leaf.classList.add("falling");
+      leaf.addEventListener("animationend", () => leaf.remove(), { once:true });
 
-// “Zona de copa” (en porcentaje del contenedor) para que caigan desde arriba del árbol, no desde cualquier parte.
-const canopyArea = {
-  xMin: 22, xMax: 78, // % horizontal
-  yMin: 18, yMax: 55  // % vertical
-};
-
-// Timing: que empiece a caer después de que broten las hojas y pare al final del loop
-const LOOP_MS = 9000;
-const FALL_START = 3200; // ms
-const FALL_END   = 8200; // ms
-
-let fallInterval = null;
-
-function spawnFallingHeart(){
-  const h = document.createElement("div");
-  h.className = "fall-heart";
-
-  const x = canopyArea.xMin + Math.random() * (canopyArea.xMax - canopyArea.xMin);
-  const y = canopyArea.yMin + Math.random() * (canopyArea.yMax - canopyArea.yMin);
-
-  const dur = 2600 + Math.random() * 2400; // 2.6s a 5s
-  const wind = (Math.random() * 220 - 110).toFixed(0) + "px";
-
-  const colors = ["#ff2f86", "#ff5fb0", "#ff1f5a", "#ff79c6"];
-  const c = colors[Math.floor(Math.random() * colors.length)];
-
-  h.style.setProperty("--x", x + "%");
-  h.style.setProperty("--y", y + "%");
-  h.style.setProperty("--dur", dur + "ms");
-  h.style.setProperty("--wind", wind);
-  h.style.setProperty("--c", c);
-
-  falling.appendChild(h);
-  setTimeout(() => h.remove(), dur + 50);
-}
-
-function startFalling(){
-  if (fallInterval) return;
-  fallInterval = setInterval(spawnFallingHeart, 160);
-}
-function stopFalling(){
-  if (!fallInterval) return;
-  clearInterval(fallInterval);
-  fallInterval = null;
-}
-
-// Loop sincronizado con la animación CSS
-function scheduleLoop(){
-  setTimeout(startFalling, FALL_START);
-  setTimeout(stopFalling, FALL_END);
+      setTimeout(dropOne, randi(FALL_INTERVAL_MIN, FALL_INTERVAL_MAX));
+    })();
+  }
 
   setTimeout(() => {
-    stopFalling();
-    scheduleLoop();
-  }, LOOP_MS);
-}
-scheduleLoop();
+    sproutLeaves();
+    const avg = (SPROUT_INTERVAL_MIN + SPROUT_INTERVAL_MAX) / 2;
+    const approxEnd = HEART_COUNT * avg;
+    setTimeout(() => startFalling(), approxEnd + FALL_START_GAP);
+  }, SPROUT_START_DELAY);
+})();
