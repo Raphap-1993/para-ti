@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- TÍTULO Y PREVIEW PARA WHATSAPP -->
+  <title>Para ti &lt;3</title>
+  <meta property="og:title" content="Para ti <3" />
+  <meta property="og:description" content="Abrí esto cuando puedas 💗" />
+  <!-- Opcional: si subes una imagen preview.png -->
+  <meta property="og:image" content="preview.png" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="card">
+    <section class="text">
+      <h1>Para el amor de mi vida:</h1>
+      <p id="typewriter" aria-label="mensaje"></p>
+      <p class="since" id="since"></p>
+    </section>
+
+    <section class="scene" aria-hidden="true">
+      <!-- Árbol simple con SVG -->
+      <svg class="tree" viewBox="0 0 320 320">
+        <g class="trunk">
+          <rect x="150" y="150" width="20" height="120" rx="10"></rect>
+          <path d="M160 170 C135 165, 120 150, 110 130" />
+          <path d="M160 175 C185 170, 205 155, 215 135" />
+        </g>
+
+        <!-- “Brote” de corazones (hojas) -->
+        <g class="blooms">
+          <circle class="bloom" cx="110" cy="130" r="10" />
+          <circle class="bloom" cx="215" cy="135" r="10" />
+          <circle class="bloom" cx="160" cy="125" r="12" />
+          <circle class="bloom" cx="140" cy="140" r="9" />
+          <circle class="bloom" cx="180" cy="142" r="9" />
+        </g>
+      </svg>
+
+      <!-- Corazones que caen (se generan por JS) -->
+      <div class="falling" id="falling"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
