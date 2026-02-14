@@ -1,77 +1,161 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Para ti &lt;3</title>
+<!-- Árbol tipo cerezo (romántico) -->
+<div class="tree-wrap" aria-hidden="true">
+  <svg class="tree" viewBox="0 0 360 360">
+    <!-- sombra suave -->
+    <ellipse class="shadow" cx="180" cy="320" rx="80" ry="14"></ellipse>
 
-  <meta property="og:title" content="Para ti <3" />
-  <meta property="og:description" content="Abre esto cuando puedas 💗" />
-  <meta property="og:image" content="preview.png" />
+    <!-- tronco -->
+    <path class="trunk"
+      d="M175 305
+         C170 270, 165 250, 165 225
+         C165 205, 175 195, 175 175
+         C175 155, 160 145, 160 125
+         C160 95, 185 95, 190 120
+         C195 145, 210 155, 210 180
+         C210 205, 195 215, 195 235
+         C195 255, 192 275, 190 305
+         Z"></path>
 
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <main class="card">
-    <section class="text">
-      <h1>Para el amor de mi vida:</h1>
-      <p id="typewriter"></p>
-      <p class="since" id="since"></p>
-    </section>
+    <!-- ramitas -->
+    <path class="branch" d="M175 190 C150 175, 135 155, 125 135"></path>
+    <path class="branch" d="M195 200 C225 190, 245 170, 255 150"></path>
+    <path class="branch" d="M185 170 C175 150, 170 130, 165 110"></path>
 
-    <section class="scene">
-      <svg class="tree" viewBox="0 0 360 360" aria-hidden="true">
-        <!-- TRONCO + RAMAS (se dibuja con dashoffset) -->
-        <path class="trunk"
-          d="M180 320
-             C180 295, 180 270, 180 245
-             C180 225, 175 205, 170 190
-             C165 175, 160 160, 160 145" />
-        <path class="branch"
-          d="M170 210
-             C150 205, 135 195, 125 180
-             C118 170, 112 160, 108 150" />
-        <path class="branch"
-          d="M176 220
-             C200 215, 220 205, 235 190
-             C248 177, 258 165, 268 150" />
-        <path class="branch"
-          d="M165 170
-             C145 165, 132 155, 120 140" />
-        <path class="branch"
-          d="M168 175
-             C195 170, 210 160, 228 145" />
+    <!-- copa (bolita grande rosa) -->
+    <circle class="canopy" cx="180" cy="120" r="82"></circle>
+    <circle class="canopy2" cx="130" cy="135" r="55"></circle>
+    <circle class="canopy2" cx="235" cy="140" r="58"></circle>
+    <circle class="canopy3" cx="175" cy="70" r="52"></circle>
 
-        <!-- RAÍZ (aparece al inicio) -->
-        <path class="root"
-          d="M180 320 C165 330, 150 336, 130 338" />
-        <path class="root"
-          d="M180 320 C195 332, 210 338, 232 340" />
+    <!-- corazoncitos dentro de la copa -->
+    <g class="hearts-in">
+      <path class="heart h1" d="M140 115
+        C140 105, 152 103, 156 112
+        C160 103, 172 105, 172 115
+        C172 128, 156 138, 156 138
+        C156 138, 140 128, 140 115 Z"/>
+      <path class="heart h2" d="M210 110
+        C210 102, 220 100, 223 107
+        C226 100, 236 102, 236 110
+        C236 121, 223 129, 223 129
+        C223 129, 210 121, 210 110 Z"/>
+      <path class="heart h3" d="M175 145
+        C175 137, 185 136, 188 143
+        C191 136, 201 137, 201 145
+        C201 156, 188 164, 188 164
+        C188 164, 175 156, 175 145 Z"/>
+      <path class="heart h4" d="M120 150
+        C120 143, 129 142, 132 148
+        C135 142, 144 143, 144 150
+        C144 160, 132 167, 132 167
+        C132 167, 120 160, 120 150 Z"/>
+      <path class="heart h5" d="M235 155
+        C235 148, 244 147, 247 153
+        C250 147, 259 148, 259 155
+        C259 165, 247 172, 247 172
+        C247 172, 235 165, 235 155 Z"/>
+    </g>
+  </svg>
 
-        <!-- HOJAS (corazones) -->
-        <g class="leaves">
-          <!-- Copita izquierda -->
-          <path class="leaf" d="M120 150 C110 140, 95 145, 95 160 C95 175, 115 182, 120 195 C125 182, 145 175, 145 160 C145 145, 130 140, 120 150 Z"/>
-          <path class="leaf" d="M140 165 C132 157, 120 160, 120 172 C120 184, 136 190, 140 200 C144 190, 160 184, 160 172 C160 160, 148 157, 140 165 Z"/>
-          <path class="leaf" d="M110 175 C102 168, 92 171, 92 182 C92 193, 106 198, 110 208 C114 198, 128 193, 128 182 C128 171, 118 168, 110 175 Z"/>
+  <!-- corazones cayendo -->
+  <div class="falling">
+    <span class="fh"></span><span class="fh"></span><span class="fh"></span>
+    <span class="fh"></span><span class="fh"></span><span class="fh"></span>
+    <span class="fh"></span><span class="fh"></span><span class="fh"></span>
+  </div>
+</div>
 
-          <!-- Centro -->
-          <path class="leaf" d="M180 130 C170 120, 154 125, 154 142 C154 160, 176 168, 180 185 C184 168, 206 160, 206 142 C206 125, 190 120, 180 130 Z"/>
-          <path class="leaf" d="M165 150 C158 143, 147 146, 147 157 C147 169, 162 174, 165 184 C168 174, 183 169, 183 157 C183 146, 172 143, 165 150 Z"/>
-          <path class="leaf" d="M195 150 C188 143, 177 146, 177 157 C177 169, 192 174, 195 184 C198 174, 213 169, 213 157 C213 146, 202 143, 195 150 Z"/>
+<style>
+  .tree-wrap{
+    position: relative;
+    width: min(360px, 70vw);
+    aspect-ratio: 1/1;
+    margin: 0 auto;
+  }
 
-          <!-- Derecha -->
-          <path class="leaf" d="M250 150 C240 140, 225 145, 225 160 C225 175, 245 182, 250 195 C255 182, 275 175, 275 160 C275 145, 260 140, 250 150 Z"/>
-          <path class="leaf" d="M230 165 C222 157, 210 160, 210 172 C210 184, 226 190, 230 200 C234 190, 250 184, 250 172 C250 160, 238 157, 230 165 Z"/>
-          <path class="leaf" d="M260 175 C252 168, 242 171, 242 182 C242 193, 256 198, 260 208 C264 198, 278 193, 278 182 C278 171, 268 168, 260 175 Z"/>
-        </g>
-      </svg>
+  .tree{
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
+  }
 
-      <!-- Capa donde caen los corazones desde la copa -->
-      <div class="falling" id="falling"></div>
-    </section>
-  </main>
+  .shadow{ fill: rgba(0,0,0,.12); }
 
-  <script src="script.js"></script>
-</body>
-</html>
+  .trunk{
+    fill: #7a4a2a;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.10));
+  }
+  .branch{
+    fill: none;
+    stroke: #6b3f24;
+    stroke-width: 10;
+    stroke-linecap: round;
+    opacity: .9;
+  }
+
+  .canopy{ fill: #ff7fb0; opacity: .95; }
+  .canopy2{ fill: #ff93bf; opacity: .92; }
+  .canopy3{ fill: #ff6aa7; opacity: .92; }
+
+  .hearts-in .heart{
+    fill: rgba(255,255,255,.75);
+    stroke: rgba(255,255,255,.35);
+    stroke-width: 2;
+    transform-origin: center;
+    animation: pop 2.6s ease-in-out infinite;
+  }
+  .h2{ animation-delay: .3s; }
+  .h3{ animation-delay: .6s; }
+  .h4{ animation-delay: .9s; }
+  .h5{ animation-delay: 1.2s; }
+
+  @keyframes pop{
+    0%,100%{ transform: scale(1); opacity: .75; }
+    50%{ transform: scale(1.12); opacity: .95; }
+  }
+
+  /* corazones cayendo */
+  .falling{
+    position:absolute; inset:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .fh{
+    position:absolute;
+    top:-10%;
+    left: calc(var(--x) * 1%);
+    width: 16px;
+    height: 16px;
+    background: #ff5fa2;
+    transform: rotate(45deg);
+    border-radius: 4px;
+    opacity: .85;
+    animation: fall var(--d) linear infinite;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.12));
+  }
+  .fh::before, .fh::after{
+    content:"";
+    position:absolute;
+    width: 16px; height: 16px;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .fh::before{ left:-8px; top:0; }
+  .fh::after{ left:0; top:-8px; }
+
+  .fh:nth-child(1){ --x: 20; --d: 6.5s; transform: rotate(45deg) scale(.8); }
+  .fh:nth-child(2){ --x: 35; --d: 7.2s; transform: rotate(45deg) scale(1);  opacity:.7;}
+  .fh:nth-child(3){ --x: 50; --d: 5.8s; transform: rotate(45deg) scale(.9); }
+  .fh:nth-child(4){ --x: 62; --d: 8.0s; transform: rotate(45deg) scale(1.1); opacity:.65;}
+  .fh:nth-child(5){ --x: 75; --d: 6.8s; transform: rotate(45deg) scale(.85); }
+  .fh:nth-child(6){ --x: 28; --d: 7.9s; transform: rotate(45deg) scale(.95); opacity:.6;}
+  .fh:nth-child(7){ --x: 44; --d: 6.1s; transform: rotate(45deg) scale(.75); }
+  .fh:nth-child(8){ --x: 58; --d: 7.0s; transform: rotate(45deg) scale(.9);  opacity:.7;}
+  .fh:nth-child(9){ --x: 83; --d: 8.4s; transform: rotate(45deg) scale(.8);  opacity:.6;}
+
+  @keyframes fall{
+    0%{ transform: translateY(0) rotate(45deg); }
+    100%{ transform: translateY(115%) rotate(45deg); }
+  }
+</style>
