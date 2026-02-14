@@ -1,0 +1,157 @@
+:root{
+  --bg1:#ff4fa3;
+  --bg2:#7a1b88;
+  --card:#fff3f7;
+  --ink:#2a1b2b;
+  --trunk:#7a4a2a;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.25), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,.18), transparent 45%),
+    linear-gradient(135deg, var(--bg1), var(--bg2));
+  overflow:hidden;
+}
+
+.card{
+  width:min(920px, 94vw);
+  min-height:520px;
+  background:var(--card);
+  border-radius:24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  padding:24px;
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap:18px;
+  position:relative;
+}
+
+@media (max-width: 820px){
+  .card{grid-template-columns:1fr; min-height:640px;}
+}
+
+.text h1{
+  margin:0 0 12px;
+  font-size: clamp(22px, 3.2vw, 34px);
+}
+#typewriter{
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height:1.35;
+  min-height: 6.5em;
+  white-space: pre-wrap;
+}
+.since{
+  margin-top:14px;
+  opacity:.8;
+}
+
+.scene{
+  position:relative;
+  border-radius:18px;
+  background:rgba(255,255,255,.65);
+  overflow:hidden;
+  min-height:420px;
+}
+
+/* Árbol */
+.tree{
+  width:100%;
+  height:100%;
+  position:absolute;
+  inset:0;
+  transform-origin: 50% 90%;
+  animation: treeGrow 6s ease-in-out infinite;
+}
+
+.trunk rect{
+  fill:var(--trunk);
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,.18));
+}
+.trunk path{
+  fill:none;
+  stroke:var(--trunk);
+  stroke-width:10;
+  stroke-linecap:round;
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,.18));
+}
+
+/* “Brote” de hojas/corazones */
+.bloom{
+  fill:#ff2f86;
+  opacity:0;
+  transform-origin: center;
+  animation: bloomPop 6s ease-in-out infinite;
+}
+.bloom:nth-child(2){animation-delay:.25s}
+.bloom:nth-child(3){animation-delay:.45s}
+.bloom:nth-child(4){animation-delay:.65s}
+.bloom:nth-child(5){animation-delay:.85s}
+
+/* Corazones cayendo */
+.falling{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.heart{
+  position:absolute;
+  width:14px;
+  height:14px;
+  transform: rotate(45deg);
+  opacity:.9;
+  animation: fall var(--dur) linear infinite;
+  left: var(--x);
+  top: -20px;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,.12));
+}
+.heart::before,
+.heart::after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:14px;
+  background: var(--c);
+  border-radius:50%;
+}
+.heart{
+  background: var(--c);
+}
+.heart::before{ left:-7px; top:0; }
+.heart::after{ left:0; top:-7px; }
+
+/* Animaciones principales */
+@keyframes treeGrow{
+  0%   { transform: translateY(60px) scaleY(.25) scaleX(.9); opacity:.55; }
+  35%  { transform: translateY(0) scaleY(1) scaleX(1); opacity:1; }
+  70%  { transform: translateY(0) scaleY(1) scaleX(1); opacity:1; }
+  100% { transform: translateY(60px) scaleY(.25) scaleX(.9); opacity:.55; }
+}
+
+@keyframes bloomPop{
+  0%, 25% { opacity:0; transform: scale(.2); }
+  45%     { opacity:1; transform: scale(1.15); }
+  60%     { opacity:1; transform: scale(1); }
+  80%     { opacity:1; transform: scale(1); }
+  100%    { opacity:0; transform: scale(.2); }
+}
+
+@keyframes fall{
+  0%{
+    transform: translate(0, 0) rotate(45deg);
+    opacity:0;
+  }
+  10%{opacity:.9;}
+  100%{
+    transform: translate(var(--wind), 520px) rotate(405deg);
+    opacity:0;
+  }
+}
