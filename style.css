@@ -93,7 +93,7 @@ body{
   left:50%;
   bottom: 14px;
   width: 42px;
-  height: 0px; /* crecerá */
+  height: 0px;
   transform: translateX(-50%);
   border-radius: 14px;
   background: linear-gradient(180deg, var(--trunk1), var(--trunk2));
@@ -117,7 +117,7 @@ body{
   height: 14px;
   transform: rotate(45deg);
   border-radius: 4px;
-  opacity: 0;              /* aparecerán */
+  opacity: 0;
   transform-origin:center;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,.12));
 }
@@ -144,7 +144,6 @@ body{
   100% { opacity:1; transform: translateY(0px) rotate(45deg) scale(1.0); }
 }
 
-/* Línea inferior tipo la del video */
 .bottom-line{
   height: 3px;
   background: rgba(0,0,0,.10);
@@ -152,7 +151,6 @@ body{
   border-radius: 999px;
 }
 
-/* Capa de hojas cayendo */
 .fall-layer{
   position:fixed;
   inset:0;
@@ -190,7 +188,6 @@ body{
   }
 }
 
-/* Responsive */
 @media (max-width: 760px){
   .content{ grid-template-columns: 1fr; }
   .right{ margin-top: 10px; }
