@@ -1,33 +1,22 @@
-/* =========================
-   CONFIG
-========================= */
-
-// Cambia SOLO la fecha, si quieres que el contador sea real.
+// Cambia SOLO la fecha si quieres
 const LOVE_START = "2025-02-14T00:00:00";
 
-// Texto EXACTO (no cambiado)
+// Texto EXACTO (no modificado)
 const LINES = [
   { id: "t1", text: "Para el amor de mi vida:" },
-  { id: "t2", text: "Si pudiera elegir un lugar\nseguro, sería a tu lado." },
+  { id: "t2", text: "Si pudiera elegir un lugar seguro, sería a tu lado." },
   { id: "t3", text: "Mi amor por ti comenzó hace..." }
 ];
 
-// Timings (ms)
 const TRUNK_GROW_MS = 1600;
 const LEAVES_POP_TOTAL_MS = 1400;
-const START_FALL_AFTER_MS = 700; // después de empezar a salir hojas
+const START_FALL_AFTER_MS = 700;
 
-/* =========================
-   DOM
-========================= */
 const canopyEl = document.getElementById("canopy");
 const fallLayer = document.getElementById("fallLayer");
 const counterEl = document.getElementById("counter");
 const trunkEl = document.querySelector(".trunk");
 
-/* =========================
-   Utils
-========================= */
 const palette = ["#ff1744","#ff2b6a","#ff5c8a","#ffd1dc","#ffffff"];
 const rand = (min, max) => Math.random() * (max - min) + min;
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -50,10 +39,8 @@ function updateCounter(){
     `${days} días ${pad2(hours)} horas ${pad2(minutes)} minutos ${pad2(seconds)} segundos`;
 }
 
-/* =========================
-   Typewriter (texto escribiéndose)
-========================= */
-async function typeLine(el, text, speed = 22){
+// Typewriter
+async function typeLine(el, text, speed = 24){
   el.textContent = "";
   for (let i = 0; i < text.length; i++){
     el.textContent += text[i];
@@ -64,16 +51,12 @@ async function typeLine(el, text, speed = 22){
 async function runTypewriter(){
   for (const line of LINES){
     const el = document.getElementById(line.id);
-    await typeLine(el, line.text, 22);
-    await sleep(160);
+    await typeLine(el, line.text, 24);
+    await sleep(220);
   }
 }
 
-/* =========================
-   Tree: trunk grow → leaves appear
-========================= */
-
-// corazón paramétrico (contorno)
+// Heart contour
 function heartPoints(n=240){
   const pts = [];
   for(let i=0;i<n;i++){
@@ -85,7 +68,7 @@ function heartPoints(n=240){
   return pts;
 }
 
-function buildLeaves(count=270){
+function buildLeaves(count=280){
   canopyEl.innerHTML = "";
   const W = canopyEl.clientWidth;
   const H = canopyEl.clientHeight;
@@ -100,11 +83,9 @@ function buildLeaves(count=270){
   for(let i=0;i<count;i++){
     const p = pts[Math.floor(Math.random()*pts.length)];
 
-    // base mapping
     let px = ((p.x - minX) / (maxX - minX)) * W;
     let py = (1 - (p.y - minY) / (maxY - minY)) * H;
 
-    // push inward for fill
     const cx = (minX + maxX)/2;
     const cy = (minY + maxY)/2;
     const nx = (p.x - cx) / (maxX - minX);
@@ -138,29 +119,17 @@ async function growTrunk(){
 }
 
 async function popLeaves(leaves){
-  // aparecen en oleadas (como “creciendo”)
-  const start = performance.now();
   const total = leaves.length;
-
   for(let i=0;i<total;i++){
     const t = (i/total) * LEAVES_POP_TOTAL_MS;
-    setTimeout(() => {
-      leaves[i].classList.add("pop");
-    }, t);
+    setTimeout(() => leaves[i].classList.add("pop"), t);
   }
-
-  // espera a que termine
   await sleep(LEAVES_POP_TOTAL_MS + 250);
 }
 
-/* =========================
-   Falling leaves/hearts
-========================= */
-
+// Falling hearts from canopy
 function spawnFallingFromCanopy(){
   const rect = canopyEl.getBoundingClientRect();
-
-  // punto de salida dentro del “corazón”
   const x = rand(rect.left + rect.width*0.15, rect.left + rect.width*0.85);
   const y = rand(rect.top + rect.height*0.25, rect.top + rect.height*0.82);
 
@@ -182,40 +151,25 @@ function spawnFallingFromCanopy(){
   setTimeout(() => el.remove(), duration*1000 + 200);
 }
 
-/* =========================
-   Orchestrator (todo junto)
-========================= */
 async function start(){
-  // contador continuo
   updateCounter();
   setInterval(updateCounter, 1000);
 
-  // preparar hojas (pero invisibles)
   const leaves = buildLeaves(280);
 
-  // 1) crecer tronco
   const trunkTask = growTrunk();
-
-  // 2) escribir texto al mismo tiempo (como el video)
   const typeTask = runTypewriter();
 
   await trunkTask;
 
-  // 3) aparecer hojas
   const popTask = popLeaves(leaves);
 
-  // 4) empezar caída mientras siguen apareciendo
   setTimeout(() => {
-    // lluvia continua desde el canopy
     setInterval(spawnFallingFromCanopy, 150);
   }, START_FALL_AFTER_MS);
 
   await Promise.all([typeTask, popTask]);
 }
 
-// Rebuild on resize
-window.addEventListener("resize", () => {
-  buildLeaves(280);
-});
-
+window.addEventListener("resize", () => buildLeaves(280));
 window.addEventListener("load", start);
