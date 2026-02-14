@@ -1,33 +1,40 @@
-<div class="tree-section">
-  <svg id="treeSvg" viewBox="0 0 600 600" class="tree-svg" aria-hidden="true">
-    <defs>
-      <symbol id="heart" viewBox="0 0 32 32">
-        <path d="M16 29s-12-7.4-12-16A7 7 0 0 1 16 9a7 7 0 0 1 12 4c0 8.6-12 16-12 16z"/>
-      </symbol>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>San Valentín</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-      <linearGradient id="trunkGrad" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0" stop-color="#ff4f8f"/>
-        <stop offset="1" stop-color="#e51f5f"/>
-      </linearGradient>
-    </defs>
+<body>
+  <div class="scene">
+    <main class="card" aria-label="Carta">
+      <div class="content">
+        <section class="left">
+          <p class="p" id="t1"></p>
+          <p class="p" id="t2"></p>
 
-    <path id="trunk" class="trunk"
-      d="M290 560
-         C270 505, 270 455, 280 405
-         C290 355, 310 320, 305 275
-         C300 235, 275 210, 270 170
-         C265 130, 290 110, 310 125
-         C330 140, 335 170, 340 210
-         C345 250, 365 270, 370 305
-         C375 340, 360 370, 355 410
-         C350 450, 350 505, 330 560
-         Z" />
+          <div class="spacer"></div>
 
-    <path class="branch" d="M310 300 C265 275, 235 240, 220 205" />
-    <path class="branch" d="M325 320 C375 300, 415 260, 440 220" />
-    <path class="branch" d="M315 250 C300 220, 290 190, 285 160" />
-    <path class="branch" d="M335 270 C360 245, 380 215, 395 185" />
+          <p class="p subtle" id="t3"></p>
+          <p class="counter" id="counter">—</p>
+        </section>
 
-    <g id="canopy"></g>
-  </svg>
-</div>
+        <section class="right" aria-hidden="true">
+          <div class="tree">
+            <div class="trunk"></div>
+            <div class="canopy" id="canopy"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="bottom-line"></div>
+    </main>
+
+    <div class="fall-layer" id="fallLayer" aria-hidden="true"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
