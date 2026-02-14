@@ -3,45 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <!-- TÍTULO Y PREVIEW PARA WHATSAPP -->
   <title>Para ti &lt;3</title>
+
   <meta property="og:title" content="Para ti <3" />
   <meta property="og:description" content="Abrí esto cuando puedas 💗" />
-  <!-- Opcional: si subes una imagen preview.png -->
   <meta property="og:image" content="preview.png" />
 
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
   <main class="card">
     <section class="text">
       <h1>Para el amor de mi vida:</h1>
-      <p id="typewriter" aria-label="mensaje"></p>
+      <p id="typewriter"></p>
       <p class="since" id="since"></p>
     </section>
 
-    <section class="scene" aria-hidden="true">
-      <!-- Árbol simple con SVG -->
-      <svg class="tree" viewBox="0 0 320 320">
-        <g class="trunk">
-          <rect x="150" y="150" width="20" height="120" rx="10"></rect>
-          <path d="M160 170 C135 165, 120 150, 110 130" />
-          <path d="M160 175 C185 170, 205 155, 215 135" />
-        </g>
+    <section class="scene">
+      <svg class="tree" viewBox="0 0 360 360" aria-hidden="true">
+        <!-- TRONCO + RAMAS (se dibuja con dashoffset) -->
+        <path class="trunk"
+          d="M180 320
+             C180 295, 180 270, 180 245
+             C180 225, 175 205, 170 190
+             C165 175, 160 160, 160 145" />
+        <path class="branch"
+          d="M170 210
+             C150 205, 135 195, 125 180
+             C118 170, 112 160, 108 150" />
+        <path class="branch"
+          d="M176 220
+             C200 215, 220 205, 235 190
+             C248 177, 258 165, 268 150" />
+        <path class="branch"
+          d="M165 170
+             C145 165, 132 155, 120 140" />
+        <path class="branch"
+          d="M168 175
+             C195 170, 210 160, 228 145" />
 
-        <!-- “Brote” de corazones (hojas) -->
-        <g class="blooms">
-          <circle class="bloom" cx="110" cy="130" r="10" />
-          <circle class="bloom" cx="215" cy="135" r="10" />
-          <circle class="bloom" cx="160" cy="125" r="12" />
-          <circle class="bloom" cx="140" cy="140" r="9" />
-          <circle class="bloom" cx="180" cy="142" r="9" />
+        <!-- RAÍZ (aparece al inicio) -->
+        <path class="root"
+          d="M180 320 C165 330, 150 336, 130 338" />
+        <path class="root"
+          d="M180 320 C195 332, 210 338, 232 340" />
+
+        <!-- HOJAS (corazones) -->
+        <g class="leaves">
+          <!-- Copita izquierda -->
+          <path class="leaf" d="M120 150 C110 140, 95 145, 95 160 C95 175, 115 182, 120 195 C125 182, 145 175, 145 160 C145 145, 130 140, 120 150 Z"/>
+          <path class="leaf" d="M140 165 C132 157, 120 160, 120 172 C120 184, 136 190, 140 200 C144 190, 160 184, 160 172 C160 160, 148 157, 140 165 Z"/>
+          <path class="leaf" d="M110 175 C102 168, 92 171, 92 182 C92 193, 106 198, 110 208 C114 198, 128 193, 128 182 C128 171, 118 168, 110 175 Z"/>
+
+          <!-- Centro -->
+          <path class="leaf" d="M180 130 C170 120, 154 125, 154 142 C154 160, 176 168, 180 185 C184 168, 206 160, 206 142 C206 125, 190 120, 180 130 Z"/>
+          <path class="leaf" d="M165 150 C158 143, 147 146, 147 157 C147 169, 162 174, 165 184 C168 174, 183 169, 183 157 C183 146, 172 143, 165 150 Z"/>
+          <path class="leaf" d="M195 150 C188 143, 177 146, 177 157 C177 169, 192 174, 195 184 C198 174, 213 169, 213 157 C213 146, 202 143, 195 150 Z"/>
+
+          <!-- Derecha -->
+          <path class="leaf" d="M250 150 C240 140, 225 145, 225 160 C225 175, 245 182, 250 195 C255 182, 275 175, 275 160 C275 145, 260 140, 250 150 Z"/>
+          <path class="leaf" d="M230 165 C222 157, 210 160, 210 172 C210 184, 226 190, 230 200 C234 190, 250 184, 250 172 C250 160, 238 157, 230 165 Z"/>
+          <path class="leaf" d="M260 175 C252 168, 242 171, 242 182 C242 193, 256 198, 260 208 C264 198, 278 193, 278 182 C278 171, 268 168, 260 175 Z"/>
         </g>
       </svg>
 
-      <!-- Corazones que caen (se generan por JS) -->
+      <!-- Capa donde caen los corazones desde la copa -->
       <div class="falling" id="falling"></div>
     </section>
   </main>
